@@ -37,4 +37,6 @@
   - restart 重新开始倒计时
 
 
+*****
 
+uniapp插件市场地址：https://ext.dcloud.net.cn/plugin?id=1687
