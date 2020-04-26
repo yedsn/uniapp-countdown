@@ -1,5 +1,5 @@
 <template>
-	<view><slot :timeData="timeData" :remain="timeData.remain" :day="timeData.day" :hour="timeData.hour" :minute="timeData.minute" :second="timeData.second" /></view>
+	<view><slot :time="time" :remain="timeData.remain" :day="timeData.day" :hour="timeData.hour" :minute="timeData.minute" :second="timeData.second" /></view>
 </template>
 
 <script>
@@ -31,9 +31,9 @@ export default {
 	},
 	methods: {
 		startTimer() {
-			this.updateTime()
+			this.updateTime();
 			this.timer = setInterval(() => {
-				this.updateTime()
+				this.updateTime();
 			}, 1000);
 		},
 		updateTime() {

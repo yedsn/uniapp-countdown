@@ -1,12 +1,14 @@
 <template>
 	<view class="container">
 		<countdown-timer ref="countdown" :time="time" @finish="onFinish">
-			<template v-slot="{day, hour, minute, second, remain}">
+			
+			<template v-slot="{day, hour, minute, second, remain, time}">
 				<!-- 基本样式 -->
 				<view class="case">
 					<view class="title">基本：</view>
 					<view>{{day}}天{{hour}}时{{minute}}分{{second}}秒</view>				
 				</view>
+				<!-- #ifndef MP -->
 				<!-- 自定义样式 -->
 				<view class="case">
 					<view class="title">自定义样式：</view>
@@ -18,6 +20,7 @@
 						<view>{{fillWithZero(second, 2)}}</view>
 					</view>
 				</view>
+				<!-- #endif -->
 				<!-- 按最大有效单位显示 -->
 				<view class="case">
 					<view class="title">按最大有效单位显示：</view>
@@ -64,14 +67,19 @@
 			
 			
 		</countdown-timer>
-		<view class="reset-btn" @click="$refs.countdown.restart()">重置</view>
-		<view class="reset-btn" @click="time=1*60*60*1000">倒计时1小时</view>
-		<view class="reset-btn" @click="time=1*60*1000">倒计时1分钟</view>
-		<view class="reset-btn" @click="time=3000">倒计时3秒</view>
+		<view class="reset-btn" @click="reset(time)">重置</view>
+		<view class="reset-btn" @click="reset(1*60*60*1000)">重置为1小时</view>
+		<view class="reset-btn" @click="reset(1*60*1000)">重置为1分钟</view>
+		<view class="reset-btn" @click="reset(3000)">重置为3秒</view>
 		
 	</view>
 </template>
 
+<script module="test" lang="wxs">
+	 module.exports = {
+		msg: 'Hello'
+	}
+</script>
 <script>
 	export default {
 		data() {
@@ -86,12 +94,10 @@
 					title: '倒计时结束'
 				})
 			},
-			
-			/**
-			 * 补全数字
-			 * @param {Object} num 需要补全的值
-			 * @param {Object} n 补全位数
-			 */
+			reset(time) {
+				this.time = time
+				this.$refs.countdown.restart()
+			},
 			fillWithZero(num, n) {
 				var len = num.toString().length;
 				while (len < n) {
