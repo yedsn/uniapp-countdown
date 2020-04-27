@@ -85,11 +85,6 @@
 	</view>
 </template>
 
-<script module="test" lang="wxs">
-	 module.exports = {
-		msg: 'Hello'
-	}
-</script>
 <script>
 	export default {
 		data() {
