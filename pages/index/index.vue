@@ -1,26 +1,36 @@
 <template>
 	<view class="container">
 		<countdown-timer ref="countdown" :time="time" @finish="onFinish">
-			
 			<template v-slot="{day, hour, minute, second, remain, time}">
 				<!-- 基本样式 -->
 				<view class="case">
 					<view class="title">基本：</view>
 					<view>{{day}}天{{hour}}时{{minute}}分{{second}}秒</view>				
 				</view>
-				<!-- #ifndef MP -->
 				<!-- 自定义样式 -->
 				<view class="case">
 					<view class="title">自定义样式：</view>
 					<view class="custom">
+						
+						<!-- #ifndef MP -->
 						<view>{{fillWithZero(hour + (day * 24), 2)}}</view>
 						<view>:</view>
 						<view>{{fillWithZero(minute, 2)}}</view>
 						<view>:</view>
 						<view>{{fillWithZero(second, 2)}}</view>
+						<!-- #endif -->
+						
+						<!-- #ifdef MP -->
+						<!-- 小程序暂时不支持在v-slot内部调用方法，后期可能会支持 -->
+						<view>{{hour + (day * 24)}}</view>
+						<view>:</view>
+						<view>{{minute}}</view>
+						<view>:</view>
+						<view>{{second}}</view>
+						<!-- #endif -->
+						
 					</view>
 				</view>
-				<!-- #endif -->
 				<!-- 按最大有效单位显示 -->
 				<view class="case">
 					<view class="title">按最大有效单位显示：</view>
