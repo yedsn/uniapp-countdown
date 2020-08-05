@@ -9,6 +9,12 @@ export default {
 		time: {
 			type: Number,
 			default: 0
+		},
+		
+		// 是否自动
+		'autoStart': {
+			type: Boolean,
+			default: false
 		}
 	},
 	data() {
@@ -25,43 +31,69 @@ export default {
 	},
 	watch: {
 		time() {
-			this.timeData.remain = this.time;
-			this.restart();
+			this.reset()
 		}
 	},
 	methods: {
-		startTimer() {
-			this.updateTime();
-			this.timer = setInterval(() => {
-				this.updateTime();
-			}, 1000);
-		},
-		updateTime() {
+		
+		// 设置timeData
+		updateTimeData() {
 			let t = this.timeData.remain;
 			this.timeData.day = Math.floor(t / 1000 / 60 / 60 / 24);
 			this.timeData.hour = Math.floor((t / 1000 / 60 / 60) % 24);
 			this.timeData.minute = Math.floor((t / 1000 / 60) % 60);
 			this.timeData.second = Math.floor((t / 1000) % 60);
-			this.timeData.remain -= 1000;
-			if (this.timeData.remain < 0) {
+		},
+		
+		// 开启倒计时
+		startTimer() {
+			if (this.timer) {
 				clearInterval(this.timer);
-				this.$emit('finish');
+			}
+			if(this.timeData.remain < 1000) {
+				 return
+			}
+			this.timer = setInterval(() => {
+				this.timeData.remain -= 1000;
+				this.updateTimeData()
+				if (this.timeData.remain < 1000) {
+					this.pause()
+					this.$emit('finish');
+				}
+			}, 1000);
+		},
+		
+		// 重置倒计时
+		reset() {
+			this.timeData.remain = this.time;
+			this.updateTimeData();
+			if(this.autoStart) {
+				this.start()
+			}
+			
+		},
+		
+		// 暂停倒计时
+		pause() {
+			if(this.timer) {
+				clearInterval(this.timer);
+				this.timer = null
 			}
 		},
-		restart() {
-			if (this.timer != null) {
-				clearInterval(this.timer);
+		
+		// 开始倒计时
+		start() {
+			if(this.timer) {
+				return
 			}
-			this.timeData.remain = this.time;
-			this.startTimer();
+			this.startTimer();		
 		}
 	},
 	mounted() {
-		this.timeData.remain = this.time;
-		this.startTimer();
+		this.reset();
 	},
 	beforeDestroy() {
-		clearInterval(this.timer);
+		this.pause()
 	}
 };
 </script>

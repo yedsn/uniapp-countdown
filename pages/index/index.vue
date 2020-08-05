@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<countdown-timer ref="countdown" :time="time" @finish="onFinish">
+		<countdown-timer ref="countdown" :time="time" @finish="onFinish" autoStart>
 			<template v-slot="{day, hour, minute, second, remain, time}">
 				<!-- 基本样式 -->
 				<view class="case">
@@ -65,22 +65,24 @@
 				<!-- 剩余多少毫秒 -->
 				<view class="case">
 					<view class="title">剩余多少毫秒：</view>
-					<view>{{remain + 1000}}</view>				
+					<view>{{remain}}</view>				
 				</view>
 				<!-- 过了多少秒 -->
 				<view class="case">
 					<view class="title">过了多少秒：</view>
-					<view>{{(time - remain - 1000) / 1000}}({{time / 1000}}秒结束)</view>				
+					<view>{{(time - remain) / 1000}}({{time / 1000}}秒结束)</view>				
 				</view>
 				
 			</template>
 			
 			
 		</countdown-timer>
-		<view class="reset-btn" @click="reset(time)">重置</view>
-		<view class="reset-btn" @click="reset(1*60*60*1000)">重置为1小时</view>
-		<view class="reset-btn" @click="reset(1*60*1000)">重置为1分钟</view>
-		<view class="reset-btn" @click="reset(3000)">重置为3秒</view>
+		<view class="reset-btn" @click="$refs.countdown.start()">开始</view>
+		<view class="reset-btn" @click="$refs.countdown.pause()">暂停</view>
+		<view class="reset-btn" @click="$refs.countdown.reset()">重置</view>
+		<view class="reset-btn" @click="time = 1*60*60*1000">重置为1小时</view>
+		<view class="reset-btn" @click="time = 1*60*1000">重置为1分钟</view>
+		<view class="reset-btn" @click="time = 3000">重置为3秒</view>
 		
 	</view>
 </template>
@@ -98,10 +100,6 @@
 					icon: 'none',
 					title: '倒计时结束'
 				})
-			},
-			reset(time) {
-				this.time = time
-				this.$refs.countdown.restart()
 			},
 			fillWithZero(num, n) {
 				var len = num.toString().length;
